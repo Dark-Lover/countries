@@ -29,7 +29,9 @@ const showData = function (data) {
   <img src="${data.flag}" alt="" class="img_country" />
   </div>
   <div class="desc">
-    <div class="info population">${(data.population / 1000000).toFixed(1)}</div>
+    <div class="info population">${(data.population / 1000000).toFixed(
+      1
+    )} Hab</div>
     <div class="info currency">Currency: ${data.currencies[0].code}</div>
     <div class="info language">Language: ${data.languages[0].name}</div>
   </div>
