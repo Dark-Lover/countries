@@ -1,0 +1,5 @@
+# Avoid parcel dist folder,cache,node modules Upload!
+.cache
+dist
+node_modules
+images
