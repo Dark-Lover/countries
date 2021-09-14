@@ -12,14 +12,23 @@ let countryImg = document.querySelector(".img_country");
 let blockImg = document.querySelector(".img_block");
 let blockUi = document.querySelector(".blocks");
 
+// const getData = function (country) {
+//   const request = new XMLHttpRequest();
+//   request.open("GET", `https://restcountries.eu/rest/v2/name/${country}`);
+//   request.send();
+//   request.onload = function () {
+//     let [data] = JSON.parse(this.responseText);
+//     showData(data);
+//   };
+// };
+
 const getData = function (country) {
-  const request = new XMLHttpRequest();
-  request.open("GET", `https://restcountries.eu/rest/v2/name/${country}`);
-  request.send();
-  request.onload = function () {
-    let [data] = JSON.parse(this.responseText);
-    showData(data);
-  };
+  let data = fetch(`https://restcountries.eu/rest/v2/name/${country}`)
+    .then((response) => response.json())
+    .then((data) => {
+      let [dataf] = data;
+      showData(dataf);
+    });
 };
 const showData = function (data) {
   let htmlTemp = `
@@ -31,7 +40,7 @@ const showData = function (data) {
   <div class="desc">
     <div class="info population">${(data.population / 1000000).toFixed(
       1
-    )} Hab</div>
+    )}M Hab</div>
     <div class="info currency">Currency: ${data.currencies[0].code}</div>
     <div class="info language">Language: ${data.languages[0].name}</div>
   </div>
