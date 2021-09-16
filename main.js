@@ -1,15 +1,11 @@
-// const data = fetch(`https://restcountries.eu/rest/v2/name/morocco`);
+import "@babel/polyfill";
 
-// data.then((mydata) => {
-//   console.log(mydata);
-// });
-
-let countryName = document.querySelector(".name");
-let countryPop = document.querySelector(".population");
-let countryCur = document.querySelector(".currency");
-let countryLang = document.querySelector(".language");
-let countryImg = document.querySelector(".img_country");
-let blockImg = document.querySelector(".img_block");
+// let countryName = document.querySelector(".name");
+// let countryPop = document.querySelector(".population");
+// let countryCur = document.querySelector(".currency");
+// let countryLang = document.querySelector(".language");
+// let countryImg = document.querySelector(".img_country");
+// let blockImg = document.querySelector(".img_block");
 let blockUi = document.querySelector(".blocks");
 
 // const getData = function (country) {
@@ -22,13 +18,44 @@ let blockUi = document.querySelector(".blocks");
 //   };
 // };
 
-const getData = function (country) {
-  let data = fetch(`https://restcountries.eu/rest/v2/name/${country}`)
-    .then((response) => response.json())
-    .then((data) => {
+const getMyGeo = async function () {
+  try {
+    const pos = await getGeo();
+    const { latitude: lat, longitude: long } = pos.coords;
+    const res = await fetch(`https://geocode.xyz/${lat},${long}?geoit=json`);
+    const data = await res.json();
+    if (!data.success) {
+      getData("morocco");
+      throw new Error("GeoCode API failed");
+    } else {
+      getData(data.country);
+    }
+  } catch (err) {
+    console.log(`${err}`);
+  }
+};
+
+const getGeo = function () {
+  return new Promise((resolve) => {
+    navigator.geolocation.getCurrentPosition(resolve);
+  });
+};
+const getData = async function (country) {
+  try {
+    let response = await fetch(
+      `https://restcountries.eu/rest/v2/name/${country}`
+    );
+    let data = await response.json();
+    console.log(data);
+    if (data.status !== 404) {
       let [dataf] = data;
       showData(dataf);
-    });
+    } else {
+      throw new Error("restcountries failed");
+    }
+  } catch (err) {
+    console.log(`${err}`);
+  }
 };
 const showData = function (data) {
   let htmlTemp = `
@@ -48,8 +75,4 @@ const showData = function (data) {
   blockUi.innerHTML += htmlTemp;
 };
 
-let countries = ["Morocco", "france", "brazil", "china", "canada", "jamaica"];
-countries.map((country) => getData(country));
-// countries.forEach((country) => {
-//   getData(country);
-// });
+getMyGeo();

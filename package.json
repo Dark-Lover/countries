@@ -24,6 +24,8 @@
     "sass": "^1.39.2"
   },
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
     "cssnano": "^4.1.11"
   }
 }
+
